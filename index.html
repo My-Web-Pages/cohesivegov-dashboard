@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CohesiveGov | Command Center</title>
+    <meta name="description"
+        content="Government Initiative Dashboard - Track, visualize, and manage federal initiatives in real-time">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i data-lucide="zap" color="white" size="20"></i>
+                </div>
+                <span>CohesiveGov</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <i data-lucide="layout-grid" size="18"></i>
+                    Dashboard
+                </li>
+                <li class="nav-item">
+                    <i data-lucide="list" size="18"></i>
+                    Initiatives
+                </li>
+                <li class="nav-item">
+                    <i data-lucide="bar-chart-2" size="18"></i>
+                    Analytics
+                </li>
+                <li class="nav-item">
+                    <i data-lucide="settings" size="18"></i>
+                    Settings
+                </li>
+            </ul>
+
+            <div style="margin-top: auto; padding-top: 2rem; border-top: 1px solid var(--glass-border);">
+                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem;">Quick Stats</div>
+                <div style="font-size: 0.85rem; color: var(--text-main);">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                        <span>Total Initiatives:</span>
+                        <span id="sidebar-total" style="font-weight: 600;">0</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Active:</span>
+                        <span id="sidebar-active" style="font-weight: 600; color: var(--accent-emerald);">0</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="search-container">
+                    <i data-lucide="search" class="search-icon"></i>
+                    <input type="text" class="search-input"
+                        placeholder="Search initiatives by title, ID, agency, or tags..."
+                        onkeyup="app.handleSearch(this.value)">
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">
+                        <i data-lucide="clock" size="14"></i> Last updated: <span id="last-update">Just now</span>
+                    </span>
+                    <button onclick="app.toggleTheme()"
+                        style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 0.5rem; border-radius: 6px; cursor: pointer; color: var(--text-main); transition: all 0.2s;"
+                        title="Toggle Theme">
+                        <i id="theme-icon" data-lucide="sun" size="18"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <!-- Status Filter -->
+                <div class="filter-group">
+                    <button class="filter-button" onclick="app.toggleFilterDropdown('status')">
+                        <i data-lucide="activity" size="14"></i>
+                        Status
+                        <i data-lucide="chevron-down" size="12"></i>
+                    </button>
+                    <div id="filter-status" class="filter-dropdown">
+                        <div class="filter-option" onclick="app.toggleFilter('status', 'In Progress')">
+                            <input type="checkbox" id="status-progress">
+                            <label>In Progress</label>
+                        </div>
+                        <div class="filter-option" onclick="app.toggleFilter('status', 'Planned')">
+                            <input type="checkbox" id="status-planned">
+                            <label>Planned</label>
+                        </div>
+                        <div class="filter-option" onclick="app.toggleFilter('status', 'Completed')">
+                            <input type="checkbox" id="status-completed">
+                            <label>Completed</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Priority Filter -->
+                <div class="filter-group">
+                    <button class="filter-button" onclick="app.toggleFilterDropdown('priority')">
+                        <i data-lucide="alert-circle" size="14"></i>
+                        Priority
+                        <i data-lucide="chevron-down" size="12"></i>
+                    </button>
+                    <div id="filter-priority" class="filter-dropdown">
+                        <div class="filter-option" onclick="app.toggleFilter('priority', 'Critical')">
+                            <input type="checkbox">
+                            <label>Critical</label>
+                        </div>
+                        <div class="filter-option" onclick="app.toggleFilter('priority', 'High')">
+                            <input type="checkbox">
+                            <label>High</label>
+                        </div>
+                        <div class="filter-option" onclick="app.toggleFilter('priority', 'Medium')">
+                            <input type="checkbox">
+                            <label>Medium</label>
+                        </div>
+                        <div class="filter-option" onclick="app.toggleFilter('priority', 'Low')">
+                            <input type="checkbox">
+                            <label>Low</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Focus Area Filter -->
+                <div class="filter-group">
+                    <button class="filter-button" onclick="app.toggleFilterDropdown('focusArea')">
+                        <i data-lucide="target" size="14"></i>
+                        Focus Area
+                        <i data-lucide="chevron-down" size="12"></i>
+                    </button>
+                    <div id="filter-focusArea" class="filter-dropdown">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Lead Agency Filter -->
+                <div class="filter-group">
+                    <button class="filter-button" onclick="app.toggleFilterDropdown('leadAgency')">
+                        <i data-lucide="building-2" size="14"></i>
+                        Lead Agency
+                        <i data-lucide="chevron-down" size="12"></i>
+                    </button>
+                    <div id="filter-leadAgency" class="filter-dropdown">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Buy-in Filter -->
+                <div class="filter-group">
+                    <button class="filter-button" onclick="app.toggleFilterDropdown('buyIn')">
+                        <i data-lucide="users" size="14"></i>
+                        Buy-in
+                        <i data-lucide="chevron-down" size="12"></i>
+                    </button>
+                    <div id="filter-buyIn" class="filter-dropdown">
+                        <div class="filter-option" onclick="app.toggleFilter('buyIn', 'Unified')">
+                            <input type="checkbox">
+                            <label>✓ Unified</label>
+                        </div>
+                        <div class="filter-option" onclick="app.toggleFilter('buyIn', 'Divergent')">
+                            <input type="checkbox">
+                            <label>⚠ Divergent</label>
+                        </div>
+                        <div class="filter-option" onclick="app.toggleFilter('buyIn', 'Blocked')">
+                            <input type="checkbox">
+                            <label>✖ Blocked</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Filters Display -->
+                <div id="active-filters" class="active-filters"></div>
+
+                <!-- View Mode Controls -->
+                <div class="view-controls">
+                    <button class="view-button active" data-view="grid" onclick="app.setViewMode('grid')"
+                        title="Grid View">
+                        <i data-lucide="grid-3x3" size="16"></i>
+                    </button>
+                    <button class="view-button" data-view="table" onclick="app.setViewMode('table')" title="Table View">
+                        <i data-lucide="table" size="16"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard View -->
+            <div id="view-container" class="dashboard-view fade-in">
+                <!-- Hero Stats -->
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-total">0</div>
+                        <div class="stat-label">Total Initiatives</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-active" style="color: var(--accent-emerald)">0</div>
+                        <div class="stat-label">In Progress</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="stat-planned" style="color: var(--accent-blue)">0</div>
+                        <div class="stat-label">Planned</div>
+                    </div>
+                </div>
+
+                <!-- Grid View -->
+                <div id="initiative-grid" class="grid-container">
+                    <!-- Cards injected by JS -->
+                </div>
+
+                <!-- Table View -->
+                <div id="table-view" class="table-view" style="display: none;">
+                    <!-- Table injected by JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Details Modal -->
+    <div id="detail-modal" class="modal-overlay" onclick="if(event.target === this) app.closeModal()">
+        <div class="modal-content">
+            <button class="modal-close" onclick="app.closeModal()">
+                <i data-lucide="x"></i>
+            </button>
+            <div id="modal-container">
+                <!-- Content injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Update sidebar stats when main stats change
+        const observer = new MutationObserver(() => {
+            const total = document.getElementById('stat-total')?.innerText || '0';
+            const active = document.getElementById('stat-active')?.innerText || '0';
+            document.getElementById('sidebar-total').innerText = total;
+            document.getElementById('sidebar-active').innerText = active;
+        });
+
+        observer.observe(document.getElementById('stat-total'), { childList: true, characterData: true, subtree: true });
+        observer.observe(document.getElementById('stat-active'), { childList: true, characterData: true, subtree: true });
+
+        // Populate dynamic filter dropdowns
+        window.addEventListener('DOMContentLoaded', () => {
+            // Focus Areas
+            const focusAreas = app.getUniqueValues('focusArea');
+            const focusAreaDropdown = document.getElementById('filter-focusArea');
+            focusAreaDropdown.innerHTML = focusAreas.map(area => `
+                <div class="filter-option" onclick="app.toggleFilter('focusArea', '${area}')">
+                    <input type="checkbox">
+                    <label>${area}</label>
+                </div>
+            `).join('');
+
+            // Lead Agencies
+            const agencies = app.getUniqueValues('leadAgency');
+            const agencyDropdown = document.getElementById('filter-leadAgency');
+            agencyDropdown.innerHTML = agencies.map(agency => `
+                <div class="filter-option" onclick="app.toggleFilter('leadAgency', '${agency}')">
+                    <input type="checkbox">
+                    <label>${agency}</label>
+                </div>
+            `).join('');
+
+            // Set last update time
+            document.getElementById('last-update').innerText = new Date().toLocaleTimeString();
+        });
+    </script>
+</body>
+
+</html>
