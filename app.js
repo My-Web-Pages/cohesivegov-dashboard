@@ -287,10 +287,25 @@ const app = (() => {
                     <span class="buyin-indicator ${buyInClass}">${getBuyInIcon(item.buyIn)} ${item.buyIn}</span>
                 </div>
                 <h2 style="font-size: 1.8rem; font-weight: 700; line-height: 1.2">${item.title}</h2>
-                <div style="margin-top: 1rem;">
-                    <button onclick="app.exportToMarkdown('${item.id}')" style="background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; font-family: inherit; transition: all 0.2s;">
-                        <i data-lucide="download" size="14"></i> Download Summary
+                <div style="margin-top: 1rem; position: relative;">
+                    <button onclick="app.toggleExportMenu('${item.id}')" id="export-btn-${item.id}" style="background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent-blue); color: var(--accent-blue); padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; font-family: inherit; transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;">
+                        <i data-lucide="download" size="14"></i> Download
+                        <i data-lucide="chevron-down" size="12"></i>
                     </button>
+                    <div id="export-menu-${item.id}" style="display: none; position: absolute; top: 100%; left: 0; margin-top: 0.5rem; background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); min-width: 180px; z-index: 1000;">
+                        <button onclick="app.exportAs('${item.id}', 'text')" style="width: 100%; text-align: left; padding: 0.75rem 1rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; font-family: inherit; font-size: 0.85rem; display: flex; align-items: center; gap: 0.75rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">
+                            <i data-lucide="file-text" size="14"></i> Plain Text (.txt)
+                        </button>
+                        <button onclick="app.exportAs('${item.id}', 'json')" style="width: 100%; text-align: left; padding: 0.75rem 1rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; font-family: inherit; font-size: 0.85rem; display: flex; align-items: center; gap: 0.75rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">
+                            <i data-lucide="braces" size="14"></i> JSON (.json)
+                        </button>
+                        <button onclick="app.exportAs('${item.id}', 'csv')" style="width: 100%; text-align: left; padding: 0.75rem 1rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; font-family: inherit; font-size: 0.85rem; display: flex; align-items: center; gap: 0.75rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">
+                            <i data-lucide="table" size="14"></i> CSV (.csv)
+                        </button>
+                        <button onclick="app.exportAs('${item.id}', 'pdf')" style="width: 100%; text-align: left; padding: 0.75rem 1rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; font-family: inherit; font-size: 0.85rem; display: flex; align-items: center; gap: 0.75rem; transition: background 0.2s; border-top: 1px solid var(--glass-border);" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">
+                            <i data-lucide="file" size="14"></i> PDF (Print)
+                        </button>
+                    </div>
                 </div>
             </div>
             
@@ -318,10 +333,10 @@ const app = (() => {
                     </div>
                 </div>
 
-                <!-- Rationale / Starting Point -->
+                <!-- Rationale -->
                 ${item.rationale ? `
                 <div>
-                    <h4 style="color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.75rem;">Starting Point</h4>
+                    <h4 style="color: var(--accent-blue); text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; font-weight: 700; margin-bottom: 0.75rem;">Rationale</h4>
                     <p style="color: var(--text-main); line-height: 1.6;">${item.rationale}</p>
                 </div>
                 ` : ''}
@@ -591,6 +606,224 @@ Exported on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeStrin
         URL.revokeObjectURL(url);
     }
 
+    // Toggle export menu
+    function toggleExportMenu(id) {
+        const menu = document.getElementById(`export-menu-${id}`);
+        if (menu) {
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+    }
+
+    // Export in different formats
+    function exportAs(id, format) {
+        const item = state.initiatives.find(i => i.id === id);
+        if (!item) return;
+
+        // Close the menu
+        toggleExportMenu(id);
+
+        switch (format) {
+            case 'text':
+                exportToMarkdown(id); // Reuse existing text export
+                break;
+            case 'json':
+                exportToJSON(id);
+                break;
+            case 'csv':
+                exportToCSV(id);
+                break;
+            case 'pdf':
+                exportToPDF(id);
+                break;
+        }
+    }
+
+    // Export to JSON
+    function exportToJSON(id) {
+        const item = state.initiatives.find(i => i.id === id);
+        if (!item) return;
+
+        const jsonData = {
+            id: item.id,
+            title: item.title,
+            status: item.status,
+            priority: item.priority,
+            buyIn: item.buyIn,
+            focusArea: item.focusArea,
+            leadAgency: item.leadAgency,
+            vision: item.vision,
+            rationale: item.rationale,
+            goals: item.goals,
+            actionPlan: item.actionPlan,
+            stakeholders: item.stakeholders,
+            roadmap: item.roadmap,
+            metrics: item.metrics,
+            statusNotes: item.statusNotes,
+            referenceLinks: item.referenceLinks,
+            tags: item.tags,
+            progress: item.progress,
+            exportedOn: new Date().toISOString()
+        };
+
+        const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${item.id}_${item.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Export to CSV
+    function exportToCSV(id) {
+        const item = state.initiatives.find(i => i.id === id);
+        if (!item) return;
+
+        const csvRows = [
+            ['Field', 'Value'],
+            ['ID', item.id],
+            ['Title', item.title],
+            ['Status', item.status],
+            ['Priority', item.priority],
+            ['Buy-in', item.buyIn],
+            ['Focus Area', item.focusArea],
+            ['Lead Agency', item.leadAgency],
+            ['Vision', item.vision],
+            ['Rationale', item.rationale || ''],
+            ['Goals', item.goals.join('; ')],
+            ['Progress', `${item.progress}%`],
+            ['Project Status', item.metrics.projectStatus],
+            ['Target Date', item.metrics.targetDate],
+            ['Budget', item.metrics.budget],
+            ['Last Updated', item.metrics.lastUpdate],
+            ['Current Status', item.statusNotes || ''],
+            ['Tags', item.tags.join(', ')],
+            ['Roadmap Origin', item.roadmap.origin],
+            ['Roadmap Destination', item.roadmap.destination],
+            ['Current Phase', item.roadmap.currentPhase]
+        ];
+
+        const csvContent = csvRows.map(row =>
+            row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+        ).join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${item.id}_${item.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    // Export to PDF (using browser print)
+    function exportToPDF(id) {
+        const item = state.initiatives.find(i => i.id === id);
+        if (!item) return;
+
+        // Create a print-friendly version
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>${item.title} - ${item.id}</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 40px; max-width: 800px; margin: 0 auto; }
+                    h1 { color: #1e40af; border-bottom: 2px solid #1e40af; padding-bottom: 10px; }
+                    h2 { color: #3b82f6; margin-top: 30px; font-size: 1.2em; }
+                    .meta { background: #f3f4f6; padding: 15px; border-radius: 8px; margin: 20px 0; }
+                    .meta-item { margin: 5px 0; }
+                    .badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; margin-right: 8px; }
+                    .priority-high { background: #fef3c7; color: #92400e; }
+                    .priority-critical { background: #fee2e2; color: #991b1b; }
+                    .priority-medium { background: #dbeafe; color: #1e40af; }
+                    .priority-low { background: #f3f4f6; color: #374151; }
+                    ul { line-height: 1.8; }
+                    table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                    th, td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e7eb; }
+                    th { background: #f9fafb; font-weight: 600; }
+                    @media print { body { padding: 20px; } }
+                </style>
+            </head>
+            <body>
+                <h1>${item.title}</h1>
+                <div class="meta">
+                    <div class="meta-item"><strong>ID:</strong> ${item.id}</div>
+                    <div class="meta-item"><strong>Status:</strong> ${item.status}</div>
+                    <div class="meta-item"><strong>Priority:</strong> <span class="badge priority-${item.priority.toLowerCase()}">${item.priority}</span></div>
+                    <div class="meta-item"><strong>Buy-in:</strong> ${item.buyIn}</div>
+                    <div class="meta-item"><strong>Lead Agency:</strong> ${item.leadAgency}</div>
+                    <div class="meta-item"><strong>Focus Area:</strong> ${item.focusArea}</div>
+                </div>
+
+                <h2>Vision</h2>
+                <p>${item.vision}</p>
+
+                ${item.rationale ? `
+                <h2>Rationale</h2>
+                <p>${item.rationale}</p>
+                ` : ''}
+
+                <h2>Goals</h2>
+                <ul>
+                    ${item.goals.map(g => `<li>${g}</li>`).join('')}
+                </ul>
+
+                ${item.actionPlan && item.actionPlan.length > 0 ? `
+                <h2>Action Plan</h2>
+                <table>
+                    <thead>
+                        <tr><th>Quarter</th><th>Action</th><th>Status</th></tr>
+                    </thead>
+                    <tbody>
+                        ${item.actionPlan.map(ap => `
+                            <tr><td>${ap.quarter}</td><td>${ap.action}</td><td>${ap.status}</td></tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+                ` : ''}
+
+                <h2>Key Metrics</h2>
+                <table>
+                    <tr><td><strong>Progress</strong></td><td>${item.progress}%</td></tr>
+                    <tr><td><strong>Project Status</strong></td><td>${item.metrics.projectStatus}</td></tr>
+                    <tr><td><strong>Target Date</strong></td><td>${item.metrics.targetDate}</td></tr>
+                    <tr><td><strong>Budget</strong></td><td>${item.metrics.budget}</td></tr>
+                    <tr><td><strong>Last Updated</strong></td><td>${item.metrics.lastUpdate}</td></tr>
+                </table>
+
+                <h2>Stakeholders</h2>
+                <table>
+                    <thead>
+                        <tr><th>Name</th><th>Role</th></tr>
+                    </thead>
+                    <tbody>
+                        ${item.stakeholders.map(s => `<tr><td>${s.name}</td><td>${s.role}</td></tr>`).join('')}
+                    </tbody>
+                </table>
+
+                ${item.referenceLinks && item.referenceLinks.length > 0 ? `
+                <h2>Reference Links</h2>
+                <ul>
+                    ${item.referenceLinks.map(link => `<li><a href="${link.url}">${link.title}</a></li>`).join('')}
+                </ul>
+                ` : ''}
+
+                <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #e5e7eb; font-size: 0.9em; color: #6b7280;">
+                    <p>Exported on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
+                </div>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+
+        // Wait for content to load, then print
+        setTimeout(() => {
+            printWindow.print();
+        }, 250);
+    }
+
     // Initialize on load
     window.addEventListener('DOMContentLoaded', init);
 
@@ -607,6 +840,8 @@ Exported on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeStrin
         closeModal,
         getUniqueValues,
         toggleTheme,
-        exportToMarkdown
+        exportToMarkdown,
+        toggleExportMenu,
+        exportAs
     };
 })();
