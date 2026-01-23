@@ -68,23 +68,13 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Top Bar -->
+            <!-- Top Bar --  -->
             <header class="top-bar">
                 <div class="search-container">
                     <i data-lucide="search" class="search-icon"></i>
                     <input type="text" class="search-input"
                         placeholder="Search initiatives by title, ID, agency, or tags..."
                         onkeyup="app.handleSearch(this.value)">
-                </div>
-                <div style="display: flex; align-items: center; gap: 1rem;">
-                    <span style="font-size: 0.85rem; color: var(--text-muted);">
-                        <i data-lucide="clock" size="14"></i> Last updated: <span id="last-update">Just now</span>
-                    </span>
-                    <button onclick="app.toggleTheme()"
-                        style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 0.5rem; border-radius: 6px; cursor: pointer; color: var(--text-main); transition: all 0.2s;"
-                        title="Toggle Theme">
-                        <i id="theme-icon" data-lucide="sun" size="18"></i>
-                    </button>
                 </div>
             </header>
 
@@ -187,6 +177,18 @@
                     </div>
                 </div>
 
+                <!-- Stakeholders Filter -->
+                <div class="filter-group">
+                    <button class="filter-button" onclick="app.toggleFilterDropdown('stakeholders')">
+                        <i data-lucide="user-check" size="14"></i>
+                        Stakeholders
+                        <i data-lucide="chevron-down" size="12"></i>
+                    </button>
+                    <div id="filter-stakeholders" class="filter-dropdown">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+
                 <!-- Active Filters Display -->
                 <div id="active-filters" class="active-filters"></div>
 
@@ -198,6 +200,19 @@
                     </button>
                     <button class="view-button" data-view="table" onclick="app.setViewMode('table')" title="Table View">
                         <i data-lucide="table" size="16"></i>
+                    </button>
+                </div>
+
+                <!-- Theme Toggle & Clock (moved below filters for mobile) -->
+                <div
+                    style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0;">
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">
+                        <i data-lucide="clock" size="14"></i> Last updated: <span id="last-update">Just now</span>
+                    </span>
+                    <button onclick="app.toggleTheme()"
+                        style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 0.5rem; border-radius: 6px; cursor: pointer; color: var(--text-main); transition: all 0.2s;"
+                        title="Toggle Theme">
+                        <i id="theme-icon" data-lucide="sun" size="18"></i>
                     </button>
                 </div>
             </div>

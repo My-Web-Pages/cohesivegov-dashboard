@@ -50,6 +50,7 @@ window.INITIATIVE_DATA = [
         progress: 15,
         priority: "Critical",
         vision: "To modernize federal technology and software, thereby maximizing governmental efficiency and productivity.",
+        rationale: "Legacy government IT systems are outdated, inefficient, and costly to maintain. Modernization is critical to improve service delivery and reduce operational costs.",
         goals: ["Reorganize USDS into DOGE", "Establish DOGE Teams in agencies", "Launch Software Modernization Initiative"],
         stakeholders: [
             { name: "USDS", role: "Lead Implementation" },
@@ -81,6 +82,7 @@ window.INITIATIVE_DATA = [
         progress: 5,
         priority: "High",
         vision: "Secure the U.S. long-term supply of lithium by investing in clean, sustainable extraction methods from domestic sources.",
+        rationale: "Current dependence on foreign lithium sources creates supply chain vulnerabilities for critical technologies including EVs, batteries, and defense systems.",
         goals: ["Fund low-impact harvesting R&D", "Digital mapping of sources", "Reduce foreign dependency by 40%"],
         stakeholders: [
             { name: "DOE", role: "Lead Agency" },
@@ -112,6 +114,7 @@ window.INITIATIVE_DATA = [
         progress: 50,
         priority: "Medium",
         vision: "Improve legislative efficiency through collaboration.",
+        rationale: "Legislative processes are often siloed and inefficient. A collaborative approach can reduce duplication and accelerate policy development.",
         goals: ["Form a joint team", "Develop collaborative platforms", "Implement joint sessions"],
         stakeholders: [
             { name: "Congress", role: "Primary Authority" },
@@ -142,6 +145,7 @@ window.INITIATIVE_DATA = [
         progress: 35,
         priority: "Critical",
         vision: "Strengthen national cybersecurity posture through updated frameworks and standards.",
+        rationale: "Cyber threats are evolving rapidly, and existing frameworks need updates to address new attack vectors, ransomware, and nation-state threats.",
         goals: ["Update NIST framework", "Agency compliance program", "Public-private partnerships"],
         stakeholders: [
             { name: "CISA", role: "Lead Agency" },
@@ -173,6 +177,7 @@ window.INITIATIVE_DATA = [
         progress: 0,
         priority: "High",
         vision: "Ensure universal broadband access across rural America.",
+        rationale: "Rural communities face significant connectivity challenges, limiting access to telehealth, remote work, online education, and economic opportunities. Closing this gap is essential for equity.",
         goals: ["Allocate funding", "Partner with ISPs", "Deploy infrastructure"],
         stakeholders: [
             { name: "FCC", role: "Regulatory Authority" },

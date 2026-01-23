@@ -10,7 +10,8 @@ const app = (() => {
             focusArea: [],
             leadAgency: [],
             priority: [],
-            buyIn: []
+            buyIn: [],
+            stakeholders: []
         },
         searchQuery: '',
         sortBy: 'lastUpdate', // lastUpdate, progress, title, priority
@@ -44,8 +45,31 @@ const app = (() => {
         renderStats();
         renderView();
         setupEventListeners();
+        populateFilterDropdowns();
 
         if (window.lucide) window.lucide.createIcons();
+    }
+
+    // Populate filter dropdowns dynamically
+    function populateFilterDropdowns() {
+        // Get unique stakeholder names
+        const stakeholderNames = new Set();
+        state.initiatives.forEach(initiative => {
+            initiative.stakeholders.forEach(stakeholder => {
+                stakeholderNames.add(stakeholder.name);
+            });
+        });
+
+        // Populate stakeholders dropdown
+        const stakeholdersDropdown = document.getElementById('filter-stakeholders');
+        if (stakeholdersDropdown) {
+            stakeholdersDropdown.innerHTML = Array.from(stakeholderNames).sort().map(name => `
+                <div class="filter-option" onclick="app.toggleFilter('stakeholders', '${name}')">
+                    <input type="checkbox">
+                    <label>${name}</label>
+                </div>
+            `).join('');
+        }
     }
 
     // ========== EVENT LISTENERS ==========
@@ -81,6 +105,12 @@ const app = (() => {
             const filterValues = state.filters[filterKey];
             if (filterValues.length > 0) {
                 results = results.filter(item => {
+                    // Special handling for stakeholders (array of objects)
+                    if (filterKey === 'stakeholders') {
+                        const stakeholderNames = item.stakeholders.map(s => s.name);
+                        return filterValues.some(filterValue => stakeholderNames.includes(filterValue));
+                    }
+                    // Standard filtering for other fields
                     const itemValue = item[filterKey];
                     return filterValues.includes(itemValue);
                 });
@@ -293,6 +323,9 @@ const app = (() => {
                         <i data-lucide="chevron-down" size="12"></i>
                     </button>
                     <div id="export-menu-${item.id}" style="display: none; position: absolute; top: 100%; left: 0; margin-top: 0.5rem; background: var(--bg-panel); border: 1px solid var(--glass-border); border-radius: 8px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); min-width: 180px; z-index: 1000;">
+                        <button onclick="app.exportAs('${item.id}', 'pdf')" style="width: 100%; text-align: left; padding: 0.75rem 1rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; font-family: inherit; font-size: 0.85rem; display: flex; align-items: center; gap: 0.75rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">
+                            <i data-lucide="file" size="14"></i> PDF (Print)
+                        </button>
                         <button onclick="app.exportAs('${item.id}', 'text')" style="width: 100%; text-align: left; padding: 0.75rem 1rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; font-family: inherit; font-size: 0.85rem; display: flex; align-items: center; gap: 0.75rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">
                             <i data-lucide="file-text" size="14"></i> Plain Text (.txt)
                         </button>
@@ -301,9 +334,6 @@ const app = (() => {
                         </button>
                         <button onclick="app.exportAs('${item.id}', 'csv')" style="width: 100%; text-align: left; padding: 0.75rem 1rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; font-family: inherit; font-size: 0.85rem; display: flex; align-items: center; gap: 0.75rem; transition: background 0.2s;" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">
                             <i data-lucide="table" size="14"></i> CSV (.csv)
-                        </button>
-                        <button onclick="app.exportAs('${item.id}', 'pdf')" style="width: 100%; text-align: left; padding: 0.75rem 1rem; background: transparent; border: none; color: var(--text-main); cursor: pointer; font-family: inherit; font-size: 0.85rem; display: flex; align-items: center; gap: 0.75rem; transition: background 0.2s; border-top: 1px solid var(--glass-border);" onmouseover="this.style.background='rgba(59,130,246,0.1)'" onmouseout="this.style.background='transparent'">
-                            <i data-lucide="file" size="14"></i> PDF (Print)
                         </button>
                     </div>
                 </div>
