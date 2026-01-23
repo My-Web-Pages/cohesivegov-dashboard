@@ -979,20 +979,29 @@ body.light-theme .modal-content {
 
     /* Filter dropdown positioning - FIXED */
     .filter-dropdown {
-        position: fixed;
+        position: fixed !important;
         left: 1rem;
         right: 1rem;
-        top: auto;
+        top: auto !important;
         width: auto;
         max-height: 50vh;
         overflow-y: auto;
-        z-index: 100;
-        /* Above stats */
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        z-index: 1000 !important;
+        /* Much higher than stats */
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        background: var(--bg-panel);
+        border: 1px solid var(--glass-border);
+        border-radius: 8px;
     }
 
     .filter-dropdown.open {
-        display: block;
+        display: block !important;
+    }
+
+    /* Ensure stats are below dropdowns */
+    .hero-stats {
+        position: relative;
+        z-index: 1 !important;
     }
 
     /* Active filters */

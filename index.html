@@ -68,13 +68,40 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Top Bar --  -->
+            <!-- Top Bar -->
             <header class="top-bar">
                 <div class="search-container">
                     <i data-lucide="search" class="search-icon"></i>
                     <input type="text" class="search-input"
                         placeholder="Search initiatives by title, ID, agency, or tags..."
                         onkeyup="app.handleSearch(this.value)">
+                </div>
+
+                <!-- View Controls, Clock, and Theme Toggle -->
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <!-- View Mode Controls -->
+                    <div class="view-controls">
+                        <button class="view-button active" data-view="grid" onclick="app.setViewMode('grid')"
+                            title="Grid View">
+                            <i data-lucide="grid-3x3" size="16"></i>
+                        </button>
+                        <button class="view-button" data-view="table" onclick="app.setViewMode('table')"
+                            title="Table View">
+                            <i data-lucide="table" size="16"></i>
+                        </button>
+                    </div>
+
+                    <!-- Clock -->
+                    <span style="font-size: 0.85rem; color: var(--text-muted); white-space: nowrap;">
+                        <i data-lucide="clock" size="14"></i> <span id="last-update">Just now</span>
+                    </span>
+
+                    <!-- Theme Toggle -->
+                    <button onclick="app.toggleTheme()"
+                        style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 0.5rem; border-radius: 6px; cursor: pointer; color: var(--text-main); transition: all 0.2s;"
+                        title="Toggle Theme">
+                        <i id="theme-icon" data-lucide="sun" size="18"></i>
+                    </button>
                 </div>
             </header>
 
@@ -191,30 +218,6 @@
 
                 <!-- Active Filters Display -->
                 <div id="active-filters" class="active-filters"></div>
-
-                <!-- View Mode Controls -->
-                <div class="view-controls">
-                    <button class="view-button active" data-view="grid" onclick="app.setViewMode('grid')"
-                        title="Grid View">
-                        <i data-lucide="grid-3x3" size="16"></i>
-                    </button>
-                    <button class="view-button" data-view="table" onclick="app.setViewMode('table')" title="Table View">
-                        <i data-lucide="table" size="16"></i>
-                    </button>
-                </div>
-
-                <!-- Theme Toggle & Clock (moved below filters for mobile) -->
-                <div
-                    style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.5rem 0;">
-                    <span style="font-size: 0.85rem; color: var(--text-muted);">
-                        <i data-lucide="clock" size="14"></i> Last updated: <span id="last-update">Just now</span>
-                    </span>
-                    <button onclick="app.toggleTheme()"
-                        style="background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border); padding: 0.5rem; border-radius: 6px; cursor: pointer; color: var(--text-main); transition: all 0.2s;"
-                        title="Toggle Theme">
-                        <i id="theme-icon" data-lucide="sun" size="18"></i>
-                    </button>
-                </div>
             </div>
 
             <!-- Dashboard View -->
