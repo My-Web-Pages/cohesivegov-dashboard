@@ -842,38 +842,76 @@ body.light-theme .modal-content {
 
 /* Mobile phones (max-width: 768px) */
 @media (max-width: 768px) {
+
+    /* Top Bar - Stack vertically on mobile */
     .top-bar {
         flex-direction: column;
-        gap: 0.75rem;
+        gap: 0;
         padding: 1rem;
         align-items: stretch;
+        position: relative;
+        z-index: 10;
     }
 
+    /* Search takes full width */
     .search-container {
         width: 100%;
-        order: 1;
+        margin-bottom: 0.75rem;
     }
 
-    /* Theme toggle and clock on separate row */
+    /* Controls row: View buttons, Clock, Theme - separate row below search */
     .top-bar>div:last-child {
-        order: 2;
+        display: flex;
         justify-content: space-between;
+        align-items: center;
         width: 100%;
+        padding: 0.75rem 0;
+        border-top: 1px solid var(--glass-border);
+        border-bottom: 1px solid var(--glass-border);
+        margin-bottom: 0.5rem;
+        gap: 0.5rem;
     }
 
+    /* View controls compact on mobile */
+    .view-controls {
+        display: flex;
+        gap: 0.25rem;
+        margin: 0;
+    }
+
+    .view-button {
+        padding: 0.5rem;
+        min-width: 40px;
+    }
+
+    /* Hide "Last updated:" text on mobile, keep icon */
+    .top-bar span[style*="font-size"] {
+        font-size: 0 !important;
+    }
+
+    .top-bar span[style*="font-size"] i {
+        font-size: 14px !important;
+    }
+
+    .top-bar span[style*="font-size"] span {
+        font-size: 0.75rem !important;
+        margin-left: 0.25rem;
+    }
+
+    /* Filter Bar - completely separate section */
     .filter-bar {
-        padding: 0.75rem;
+        padding: 0.75rem 1rem;
         gap: 0.5rem;
         overflow-x: auto;
         overflow-y: hidden;
-        /* Prevent vertical scrolling */
         flex-wrap: nowrap;
         -webkit-overflow-scrolling: touch;
-        position: sticky;
-        top: 0;
-        z-index: 50;
+        position: relative;
+        z-index: 5;
         background: var(--bg-main);
         border-bottom: 1px solid var(--glass-border);
+        margin: 0 -1rem 1rem -1rem;
+        /* Full width */
     }
 
     .filter-group {
@@ -886,18 +924,14 @@ body.light-theme .modal-content {
         white-space: nowrap;
     }
 
-    .view-controls {
-        justify-content: center;
-        gap: 0.5rem;
-        margin-top: 0.5rem;
-    }
-
+    /* Stats - clearly below everything */
     .hero-stats {
         grid-template-columns: 1fr;
         gap: 0.75rem;
         position: relative;
         z-index: 1;
-        /* Below dropdowns */
+        margin-top: 1rem;
+        clear: both;
     }
 
     .stat-card {
@@ -908,10 +942,12 @@ body.light-theme .modal-content {
         font-size: 2rem;
     }
 
+    /* Grid view */
     .grid-container {
         grid-template-columns: 1fr;
         gap: 1rem;
         padding: 0 0.5rem;
+        margin-top: 1rem;
     }
 
     .initiative-card {
@@ -922,16 +958,16 @@ body.light-theme .modal-content {
         font-size: 1rem;
     }
 
-    /* Table view on mobile - make it scrollable */
+    /* Table view on mobile */
     .table-view {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        margin-top: 1rem;
     }
 
     .initiatives-table {
         font-size: 0.85rem;
         min-width: 600px;
-        /* Ensure table doesn't collapse */
     }
 
     .initiatives-table th,
@@ -952,7 +988,7 @@ body.light-theme .modal-content {
         display: none;
     }
 
-    /* Modal adjustments for mobile */
+    /* Modal adjustments */
     .modal-content {
         width: 95%;
         max-height: 95vh;
@@ -977,43 +1013,50 @@ body.light-theme .modal-content {
         grid-template-columns: 1fr !important;
     }
 
-    /* Filter dropdown positioning - FIXED */
+    /* Filter dropdowns - CRITICAL FIX */
     .filter-dropdown {
         position: fixed !important;
         left: 1rem;
         right: 1rem;
-        top: auto !important;
+        top: 50% !important;
+        transform: translateY(-50%);
         width: auto;
-        max-height: 50vh;
+        max-height: 60vh;
         overflow-y: auto;
-        z-index: 1000 !important;
-        /* Much higher than stats */
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        z-index: 9999 !important;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
         background: var(--bg-panel);
-        border: 1px solid var(--glass-border);
-        border-radius: 8px;
+        border: 2px solid var(--accent-blue);
+        border-radius: 12px;
+        padding: 0.5rem 0;
     }
 
     .filter-dropdown.open {
         display: block !important;
     }
 
-    /* Ensure stats are below dropdowns */
-    .hero-stats {
-        position: relative;
-        z-index: 1 !important;
-    }
-
     /* Active filters */
     .active-filters {
         flex-wrap: wrap;
         gap: 0.5rem;
-        padding: 0.5rem;
+        padding: 0.5rem 0;
+        margin: 0.5rem 0;
     }
 
     .filter-chip {
         font-size: 0.75rem;
         padding: 0.25rem 0.5rem;
+    }
+
+    /* Ensure proper stacking order */
+    .main-content {
+        position: relative;
+    }
+
+    /* Dashboard view container */
+    .dashboard-view {
+        position: relative;
+        z-index: 1;
     }
 }
 
