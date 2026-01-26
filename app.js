@@ -46,8 +46,23 @@ const app = (() => {
         renderView();
         setupEventListeners();
         populateFilterDropdowns();
+        moveFiltersToSidebar();
 
         if (window.lucide) window.lucide.createIcons();
+    }
+
+    // Move filter bar into sidebar
+    function moveFiltersToSidebar() {
+        const filterBar = document.querySelector('.filter-bar');
+        const sidebar = document.querySelector('.sidebar');
+
+        if (filterBar && sidebar) {
+            // Find the nav-menu and insert filter-bar after it
+            const navMenu = sidebar.querySelector('.nav-menu');
+            if (navMenu) {
+                navMenu.insertAdjacentElement('afterend', filterBar);
+            }
+        }
     }
 
     // Populate filter dropdowns dynamically

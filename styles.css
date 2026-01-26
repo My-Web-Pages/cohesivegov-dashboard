@@ -51,13 +51,15 @@ body {
 
 /* --- Sidebar --- */
 .sidebar {
-    display: none;
-    /* Hidden - not needed */
+    display: flex;
+    /* Show sidebar for filters */
     background: var(--bg-panel);
     border-right: 1px solid var(--glass-border);
     padding: 1.5rem;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.5rem;
+    overflow-y: auto;
+    width: 280px;
 }
 
 .brand {
@@ -874,6 +876,72 @@ body.light-theme .modal-content {
 
 .filter-option:hover {
     background: rgba(59, 130, 246, 0.1);
+}
+
+/* Move filter bar into sidebar layout */
+.filter-bar {
+    display: flex !important;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0;
+    background: transparent;
+    border: none;
+    position: static;
+}
+
+.filter-group {
+    width: 100%;
+}
+
+.filter-button {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    gap: 0.75rem;
+}
+
+.filter-button:hover {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--accent-blue);
+}
+
+/* Hide stats - cleaner layout */
+.hero-stats {
+    display: none !important;
+}
+
+/* Hide stats view button */
+.view-button[data-view="stats"] {
+    display: none !important;
+}
+
+/* Sidebar Filter Styles */
+.sidebar-filter-group {
+    position: relative;
+}
+
+.sidebar-filter-button {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    color: var(--text-main);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.sidebar-filter-button:hover {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: var(--accent-blue);
 }
 
 /* Mobile phones (max-width: 768px) */
