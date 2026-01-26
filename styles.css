@@ -868,9 +868,9 @@ body.light-theme .modal-content {
         justify-content: space-between;
         align-items: center;
         width: 100%;
-        padding: 0.75rem 0 0 0;
+        padding: 0.75rem 0;
         border-top: 1px solid var(--glass-border);
-        margin: 0;
+        margin-bottom: 0.75rem;
         gap: 0.75rem;
     }
 
@@ -925,18 +925,18 @@ body.light-theme .modal-content {
         white-space: nowrap;
     }
 
-    /* Stats - MUCH SMALLER */
+    /* Stats - MUCH SMALLER with minimal padding */
     .hero-stats {
         grid-template-columns: repeat(3, 1fr);
         gap: 0.5rem;
-        padding: 0.75rem 1rem;
+        padding: 0.5rem 1rem;
         margin: 0;
         position: relative;
         z-index: 1;
     }
 
     .stat-card {
-        padding: 0.75rem 0.5rem;
+        padding: 0.5rem;
         min-height: auto;
     }
 
