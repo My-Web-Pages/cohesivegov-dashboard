@@ -4,7 +4,7 @@ const app = (() => {
     const state = {
         initiatives: [],
         filtered: [],
-        viewMode: 'grid', // grid, table
+        viewMode: 'grid', // grid, table, stats
         filters: {
             status: [],
             focusArea: [],
@@ -164,6 +164,8 @@ const app = (() => {
     }
 
     function renderView() {
+        const statsSection = document.querySelector('.hero-stats');
+
         // Hide all views
         if (elements.grid) elements.grid.style.display = 'none';
         if (elements.tableView) elements.tableView.style.display = 'none';
@@ -171,10 +173,20 @@ const app = (() => {
         // Render active view
         switch (state.viewMode) {
             case 'table':
+                // Hide stats, show table
+                if (statsSection) statsSection.style.display = 'none';
                 renderTableView();
+                break;
+            case 'stats':
+                // Show stats, hide grid/table
+                if (statsSection) statsSection.style.display = 'grid';
+                if (elements.grid) elements.grid.style.display = 'none';
+                if (elements.tableView) elements.tableView.style.display = 'none';
                 break;
             case 'grid':
             default:
+                // Hide stats, show grid
+                if (statsSection) statsSection.style.display = 'none';
                 renderGridView();
                 break;
         }
